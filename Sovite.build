@@ -1,0 +1,18 @@
+bin_dir "bin"
+compile "clang -Wall -std=gnu11 -O3 -c %src_file% -o %obj_file%"
+link "clang %obj_files% -o sovite"
+
+targets
+[
+	<Main.c>  [ <Exec.h> ]
+	<Exec.c>  [ <Exec.h> ]
+	<Parse.c> [ <Parse.h> <Lex.h> ]
+	<Lex.c>   [ <Lex.h> ]
+]
+
+dependencies
+[
+	<Exec.h> [ <Parse.h> ]
+	<Parse.h>
+	<Lex.h>
+]
