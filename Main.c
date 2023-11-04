@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "Lex.h"
 #include "Parse.h"
@@ -18,6 +19,26 @@ void PrintItem(struct BuildItem *item)
 int main(int argc, char *argv[])
 {
 	struct BuildFile *bf = ParseBuildFile("Sovite.build");
+
+	if(argc > 1 && !strcmp(argv[1], "clean")) {
+		char *bin_name = NULL;
+
+		for(uint64_t i = 0; i < bf->const_count; i++) {
+			if(!strcmp(bf->consts[i].name, "bin_dir")) {
+				bin_name = bf->consts[i].val;
+				break;
+			}
+		}
+
+		if(bin_name[strlen(bin_name) - 1] == '/')
+			bin_name[strlen(bin_name) - 1] = '\0';
+
+		char *cmd = calloc(256, 1);
+		snprintf(cmd, 256, "rm -f %s/*.o", bin_name);
+		printf("$ %s\n", cmd);
+		system(cmd);
+		return 0;
+	}
 
 	/*
 	printf("Build file constants:\n");
